@@ -17,31 +17,24 @@ namespace modul6opg3.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ShopController : ControllerBase
+    public class OnlineController : ControllerBase
     {
         string url = "indkobData.json";
 
-        private readonly ILogger<ShopController> logger;
+        private readonly ILogger<OnlineController> logger;
 
-        public ShopController(ILogger<ShopController> logger)
+        public OnlineController(ILogger<OnlineController> logger)
         {
             this.logger = logger;
         }
 
-        public List<ShoppingItem> LoadJson()
-        {
-            using (StreamReader r = new StreamReader(url))
-            {
-                string json = r.ReadToEnd();
-                List<ShoppingItem> items = JsonConvert.DeserializeObject<List<ShoppingItem>>(json);
-                return items;
-            }
-        }
+        HttpClient client = new HttpClient();
+        
 
-        [HttpGet]
+[HttpGet]
         public IEnumerable<ShoppingItem> Get()
         {
-            return LoadJson();
+            return
         }
         
     }
