@@ -1,0 +1,77 @@
+﻿@page "/"
+@using modul6opg3.Client.Shared
+@inject HttpClient Http
+
+<h1>Indkøb</h1>
+
+<br />
+
+
+
+<p>Antal varer: @(shopping.Count(shop => !shop.IsDone)+(shopping.Count(shop => shop.IsDone))) </p>
+<p>Manglende varer: @shopping.Count(shop => !shop.IsDone)</p>
+
+
+<br />
+<input placeholder="Varer" @bind="newItem" />
+<button @onclick="AddShoppingItem">Tilføj Indkøb</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Bought</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var shop in SampleShop)
+        {
+            <tr>
+                <td>@shop.Title</td>
+                <td><input type="checkbox" @bind="shop.IsDone" /></td>
+            </tr>
+        }
+        @foreach (var shop in IndkobShop)
+        {
+            <tr>
+                <td>@shop.Title</td>
+                <td><input type="checkbox" @bind="shop.IsDone" /></td>
+            </tr>
+        }
+        @foreach (var shop in shopping)
+        {
+            <tr>
+                <td>@shop.Title</td>
+                <td><input type="checkbox" @bind="shop.IsDone" /></td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    private List<ShoppingItem> shopping = new List<ShoppingItem>();
+    private string newItem;
+
+
+    private void AddShoppingItem()
+    {
+        if (!string.IsNullOrWhiteSpace(newItem))
+        {
+            shopping.Add(new ShoppingItem { Title = newItem });
+            newItem = string.Empty;
+        }
+    }
+
+    private ShoppingItem[] SampleShop = Array.Empty<ShoppingItem>();
+    private ShoppingItem[] IndkobShop = Array.Empty<ShoppingItem>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        SampleShop = await Http.GetFromJsonAsync<ShoppingItem[]>("Indkob");
+        IndkobShop = await Http.GetFromJsonAsync<ShoppingItem[]>("Shop");
+    }
+}
+
+
+
